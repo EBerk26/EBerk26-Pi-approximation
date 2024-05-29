@@ -8,7 +8,7 @@ public class Main {
     }
 
     Main() {
-        vietes();
+        arctan_of_1_over_root_3();
     }
 
     void arctan_of_1() {
@@ -36,22 +36,19 @@ public class Main {
         //approximates pi using the maclaurin expansion of arctan and 6arctan(1/sqrt(3)) = pi
         //between n=30 and n=31 not enough is subtracted
         int count = 0;
-        int scale = 40;
-        BigDecimal toAdd = new BigDecimal(0);
-        BigDecimal runningTotal = new BigDecimal(0);
-        BigDecimal root3 = new BigDecimal(Math.sqrt(3));
-        BigDecimal zero = new BigDecimal(0);
-        BigDecimal one = new BigDecimal(1);
+        int scale = 500;
+        BigDecimal toAdd = new BigDecimal(2).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal runningTotal = new BigDecimal(0).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal three = new BigDecimal(3).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal root3 = squareRoot(three,scale).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal zero = new BigDecimal(0).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal one = new BigDecimal(1).setScale(scale,RoundingMode.HALF_UP);
         BigDecimal one_over_root_3 = one.divide(root3, scale, RoundingMode.HALF_UP);
-        BigDecimal six = new BigDecimal(6);
+        BigDecimal six = new BigDecimal(6).setScale(scale,RoundingMode.HALF_UP);
         BigDecimal negative;
-        BigDecimal error = new BigDecimal(200);
-        BigDecimal errorGoal = BigDecimal.valueOf(Math.pow(10, -17)).setScale(scale, RoundingMode.HALF_UP);
-        BigDecimal negativeOne = new BigDecimal(-1);
-        BigDecimal pi = new BigDecimal(Math.PI);
         final long startTime = System.currentTimeMillis();
         BigDecimal twoCountPlusOne = new BigDecimal(1).setScale(3, RoundingMode.HALF_UP);
-        while (error.compareTo(errorGoal) > 0) {
+        while (true) {
             if (count % 2 == 1) {
                 negative = new BigDecimal(-1).setScale(scale, RoundingMode.HALF_UP);
             } else {
@@ -62,18 +59,17 @@ public class Main {
             System.out.println("n = " + count + " pi = " + runningTotal.multiply(six).setScale(scale, RoundingMode.HALF_UP));
             count++;
             twoCountPlusOne = new BigDecimal(2 * count + 1).setScale(scale, RoundingMode.HALF_UP);
-            if (runningTotal.multiply(six).subtract(pi).setScale(scale, RoundingMode.HALF_UP).compareTo(zero) > 0) {
-                error = runningTotal.multiply(six).subtract(pi).setScale(scale, RoundingMode.HALF_UP);
-            } else {
-                error = runningTotal.multiply(six).subtract(pi).multiply(negativeOne).setScale(scale, RoundingMode.HALF_UP);
+            if(toAdd.equals(zero)){
+                break;
             }
+
         }
         System.out.println("Time to complete: " + ((double) (System.currentTimeMillis() - startTime)) / 1000 + " seconds");
     }
 
     void vietes() {
         //approximates pi using viète's formula
-        int scale = 10000;
+        int scale = 2000;
         BigDecimal runningTotal = new BigDecimal(1).setScale(scale, RoundingMode.HALF_UP);
         BigDecimal two = new BigDecimal(2).setScale(scale, RoundingMode.HALF_UP);
         BigDecimal zero = new BigDecimal(0).setScale(scale, RoundingMode.HALF_UP);
