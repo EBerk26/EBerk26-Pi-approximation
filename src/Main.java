@@ -88,7 +88,7 @@ public class Main {
             BigDecimal currentValueOfPi = zero.add(two.divide(runningTotal, scale, RoundingMode.HALF_UP));
             System.out.println("Count: " + count + " Pi: " + currentValueOfPi);
             if(toMultiply.equals(one)){
-                break; //stops the loop if it's converged within the scale.
+                break; //stops the loop if it's converged (if it would just multiply by 1)
             }
             count++;
         }
