@@ -8,7 +8,50 @@ public class Main {
     }
 
     Main() {
-        arctan_of_1_over_root_3();
+        int[] blah = getCount();
+        for(int i:blah){
+            System.out.println(i);
+        }
+    }
+
+    int[] getCount(){
+        int[] output = new int[10000];
+        for(int x=0;x< output.length;x++){
+            double count = 0;
+            double inCircle = 0;
+            double runningTotal = 0;
+            while(Math.abs(Math.PI-runningTotal)>=Math.pow(10,-5)){
+                double a = Math.random();
+                double b = Math.random();
+                if(a*a+b*b<1){
+                    inCircle++;
+                }
+                count++;
+                runningTotal = inCircle/count*4;
+            }
+            output[x] = (int)count;
+            System.out.println(x);
+        }
+        return output;
+    }
+
+    void probabilistic(){
+        //approximates pi by placing random points in a 1x1 square and calculating the probability they line up in a quarter circle
+        final long startTime = System.currentTimeMillis();
+        double count = 0;
+        double inCircle = 0;
+        double runningTotal = 0;
+        while(Math.abs(Math.PI-runningTotal)>=Math.pow(10,-5)){
+            double a = Math.random();
+            double b = Math.random();
+            if(a*a+b*b<1){
+                inCircle++;
+            }
+            count++;
+            runningTotal = inCircle/count*4;
+            System.out.println("Count: "+(int)count+". Pi = "+runningTotal);
+        }
+        System.out.println("Time to complete: " + ((double) (System.currentTimeMillis() - startTime)) / 1000 + " seconds");
     }
 
     void arctan_of_1() {
@@ -69,7 +112,7 @@ public class Main {
 
     void vietes() {
         //approximates pi using viète's formula
-        int scale = 2000;
+        int scale = 18000;
         BigDecimal runningTotal = new BigDecimal(1).setScale(scale, RoundingMode.HALF_UP);
         BigDecimal two = new BigDecimal(2).setScale(scale, RoundingMode.HALF_UP);
         BigDecimal zero = new BigDecimal(0).setScale(scale, RoundingMode.HALF_UP);
