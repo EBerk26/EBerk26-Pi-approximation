@@ -8,14 +8,17 @@ public class Main {
     }
 
     Main() {
-        int[] blah = getCount();
+        NewtonsZerotoHalfBigDecimal();
+
+        //this lists how much time it takes for a probabilistic method to get a certain degree of closeness to pi
+        /*int[] blah = getCount();
         for(int i:blah){
             System.out.println(i);
-        }
+        }*/
     }
 
     int[] getCount(){
-        int[] output = new int[10000];
+        int[] output = new int[300];
         for(int x=0;x< output.length;x++){
             double count = 0;
             double inCircle = 0;
@@ -32,16 +35,17 @@ public class Main {
             output[x] = (int)count;
             System.out.println(x);
         }
+        System.out.println("**********************");
         return output;
     }
 
     void probabilistic(){
-        //approximates pi by placing random points in a 1x1 square and calculating the probability they line up in a quarter circle
+        //approximates pi by placing random points in a 1x1 square and calculating the probability they're inside a quarter circle
         final long startTime = System.currentTimeMillis();
         double count = 0;
         double inCircle = 0;
         double runningTotal = 0;
-        while(Math.abs(Math.PI-runningTotal)>=Math.pow(10,-5)){
+        while(count<=Math.pow(10,8)){
             double a = Math.random();
             double b = Math.random();
             if(a*a+b*b<1){
@@ -50,6 +54,74 @@ public class Main {
             count++;
             runningTotal = inCircle/count*4;
             System.out.println("Count: "+(int)count+". Pi = "+runningTotal);
+        }
+        System.out.println("Time to complete: " + ((double) (System.currentTimeMillis() - startTime)) / 1000 + " seconds");
+    }
+    void NewtonsZeroto1Double(){
+        double n = 0;
+        double previous = 1;
+        double runningTotal = 1;
+        final long startTime = System.currentTimeMillis();
+        while(4*runningTotal-Math.PI>=Math.pow(10,-10)){
+            double toSubtract = Math.abs(previous*(1+2*n)*(0.5-n)/(3+2*n)/(n+1));
+            runningTotal-=toSubtract;
+            System.out.println("Count: "+(int)n+". Pi = "+4*runningTotal);
+            n++;
+            previous=toSubtract;
+        }
+        System.out.println("Time to complete: " + ((double) (System.currentTimeMillis() - startTime)) / 1000 + " seconds");
+    }
+    void NewtonsZeroto1BigDecimal(){
+        int scale = 20;
+        int count = 0;
+        BigDecimal zero = new BigDecimal(0).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal n = zero;
+        BigDecimal one = new BigDecimal(1).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal two = new BigDecimal(2).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal three = new BigDecimal(3).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal four = new BigDecimal(4).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal half = new BigDecimal("0.5").setScale(scale,RoundingMode.HALF_UP);
+        System.out.println(half);
+        BigDecimal previous = one;
+        BigDecimal runningTotal = one;
+        BigDecimal toSubtract = one;
+        final long startTime = System.currentTimeMillis();
+        while(!toSubtract.equals(zero)){
+            toSubtract = previous.multiply(one.add(two.multiply(n))).multiply(half.subtract(n)).divide(three.add(two.multiply(n)),scale,RoundingMode.HALF_UP).divide(n.add(one),scale,RoundingMode.HALF_UP).abs().setScale(scale,RoundingMode.HALF_UP);
+            runningTotal = runningTotal.subtract(toSubtract).setScale(scale,RoundingMode.HALF_UP);
+            System.out.println("Count: "+count+". Pi = "+runningTotal.multiply(four).stripTrailingZeros());
+            n = n.add(one);
+            count++;
+            previous = toSubtract;
+        }
+        System.out.println("Time to complete: " + ((double) (System.currentTimeMillis() - startTime)) / 1000 + " seconds");
+    }
+    void NewtonsZerotoHalfBigDecimal(){
+        int scale = (int)Math.pow(10,3);
+        int count = 0;
+        BigDecimal zero = new BigDecimal(0).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal n = zero;
+        BigDecimal one = new BigDecimal(1).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal two = new BigDecimal(2).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal three = new BigDecimal(3).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal four = new BigDecimal(4).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal half = new BigDecimal("0.5").setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal quarter = new BigDecimal("0.25").setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal root3 = squareRoot(three,scale);
+        BigDecimal eight = new BigDecimal(8).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal root3over8 = root3.divide(eight,scale,RoundingMode.HALF_UP).setScale(scale,RoundingMode.HALF_UP);;
+        BigDecimal twelve = new BigDecimal(12).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal previous = half;
+        BigDecimal runningTotal = half;
+        BigDecimal toSubtract = one;
+        final long startTime = System.currentTimeMillis();
+        while(!toSubtract.equals(zero)){
+            toSubtract = previous.multiply(one.add(two.multiply(n))).multiply(half.subtract(n)).divide(three.add(two.multiply(n)),scale,RoundingMode.HALF_UP).divide(n.add(one),scale,RoundingMode.HALF_UP).abs().multiply(quarter).setScale(scale,RoundingMode.HALF_UP);
+            runningTotal = runningTotal.subtract(toSubtract).setScale(scale,RoundingMode.HALF_UP);
+            System.out.println("Count: "+count+". Pi = "+runningTotal.subtract(root3over8).multiply(twelve).stripTrailingZeros());
+            n = n.add(one);
+            count++;
+            previous = toSubtract;
         }
         System.out.println("Time to complete: " + ((double) (System.currentTimeMillis() - startTime)) / 1000 + " seconds");
     }
