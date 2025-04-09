@@ -8,13 +8,7 @@ public class Main {
     }
 
     Main() {
-        NewtonsZerotoHalfBigDecimal();
-
-        //this lists how much time it takes for a probabilistic method to get a certain degree of closeness to pi
-        /*int[] blah = getCount();
-        for(int i:blah){
-            System.out.println(i);
-        }*/
+        arctan_of_1_over_root_3();
     }
 
     int[] getCount(){
@@ -72,23 +66,23 @@ public class Main {
         System.out.println("Time to complete: " + ((double) (System.currentTimeMillis() - startTime)) / 1000 + " seconds");
     }
     void NewtonsZeroto1BigDecimal(){
-        int scale = 20;
+        RoundingMode roundingMode = RoundingMode.DOWN;
+        int scale = 25;
         int count = 0;
-        BigDecimal zero = new BigDecimal(0).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal zero = new BigDecimal(0).setScale(scale,roundingMode);
         BigDecimal n = zero;
-        BigDecimal one = new BigDecimal(1).setScale(scale,RoundingMode.HALF_UP);
-        BigDecimal two = new BigDecimal(2).setScale(scale,RoundingMode.HALF_UP);
-        BigDecimal three = new BigDecimal(3).setScale(scale,RoundingMode.HALF_UP);
-        BigDecimal four = new BigDecimal(4).setScale(scale,RoundingMode.HALF_UP);
-        BigDecimal half = new BigDecimal("0.5").setScale(scale,RoundingMode.HALF_UP);
-        System.out.println(half);
+        BigDecimal one = new BigDecimal(1).setScale(scale,roundingMode);
+        BigDecimal two = new BigDecimal(2).setScale(scale,roundingMode);
+        BigDecimal three = new BigDecimal(3).setScale(scale,roundingMode);
+        BigDecimal four = new BigDecimal(4).setScale(scale,roundingMode);
+        BigDecimal half = one.divide(two,scale,roundingMode);
         BigDecimal previous = one;
         BigDecimal runningTotal = one;
         BigDecimal toSubtract = one;
         final long startTime = System.currentTimeMillis();
         while(!toSubtract.equals(zero)){
-            toSubtract = previous.multiply(one.add(two.multiply(n))).multiply(half.subtract(n)).divide(three.add(two.multiply(n)),scale,RoundingMode.HALF_UP).divide(n.add(one),scale,RoundingMode.HALF_UP).abs().setScale(scale,RoundingMode.HALF_UP);
-            runningTotal = runningTotal.subtract(toSubtract).setScale(scale,RoundingMode.HALF_UP);
+            toSubtract = previous.multiply(one.add(two.multiply(n))).multiply(half.subtract(n)).divide(three.add(two.multiply(n)),scale,roundingMode).divide(n.add(one),scale,roundingMode).abs().setScale(scale,roundingMode);
+            runningTotal = runningTotal.subtract(toSubtract).setScale(scale,roundingMode);
             System.out.println("Count: "+count+". Pi = "+runningTotal.multiply(four).stripTrailingZeros());
             n = n.add(one);
             count++;
@@ -97,27 +91,28 @@ public class Main {
         System.out.println("Time to complete: " + ((double) (System.currentTimeMillis() - startTime)) / 1000 + " seconds");
     }
     void NewtonsZerotoHalfBigDecimal(){
-        int scale = (int)Math.pow(10,3);
+        RoundingMode roundingMode = RoundingMode.HALF_DOWN;
+        int scale = 100;
         int count = 0;
-        BigDecimal zero = new BigDecimal(0).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal zero = new BigDecimal(0).setScale(scale,roundingMode);
         BigDecimal n = zero;
-        BigDecimal one = new BigDecimal(1).setScale(scale,RoundingMode.HALF_UP);
-        BigDecimal two = new BigDecimal(2).setScale(scale,RoundingMode.HALF_UP);
-        BigDecimal three = new BigDecimal(3).setScale(scale,RoundingMode.HALF_UP);
-        BigDecimal four = new BigDecimal(4).setScale(scale,RoundingMode.HALF_UP);
-        BigDecimal half = new BigDecimal("0.5").setScale(scale,RoundingMode.HALF_UP);
-        BigDecimal quarter = new BigDecimal("0.25").setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal one = new BigDecimal(1).setScale(scale,roundingMode);
+        BigDecimal two = new BigDecimal(2).setScale(scale,roundingMode);
+        BigDecimal three = new BigDecimal(3).setScale(scale,roundingMode);
+        BigDecimal four = new BigDecimal(4).setScale(scale,roundingMode);
+        BigDecimal half = new BigDecimal("0.5").setScale(scale,roundingMode);
+        BigDecimal quarter = new BigDecimal("0.25").setScale(scale,roundingMode);
         BigDecimal root3 = squareRoot(three,scale);
-        BigDecimal eight = new BigDecimal(8).setScale(scale,RoundingMode.HALF_UP);
-        BigDecimal root3over8 = root3.divide(eight,scale,RoundingMode.HALF_UP).setScale(scale,RoundingMode.HALF_UP);;
-        BigDecimal twelve = new BigDecimal(12).setScale(scale,RoundingMode.HALF_UP);
+        BigDecimal eight = new BigDecimal(8).setScale(scale,roundingMode);
+        BigDecimal root3over8 = root3.divide(eight,scale,roundingMode).setScale(scale,roundingMode);
+        BigDecimal twelve = new BigDecimal(12).setScale(scale,roundingMode);
         BigDecimal previous = half;
         BigDecimal runningTotal = half;
         BigDecimal toSubtract = one;
         final long startTime = System.currentTimeMillis();
         while(!toSubtract.equals(zero)){
-            toSubtract = previous.multiply(one.add(two.multiply(n))).multiply(half.subtract(n)).divide(three.add(two.multiply(n)),scale,RoundingMode.HALF_UP).divide(n.add(one),scale,RoundingMode.HALF_UP).abs().multiply(quarter).setScale(scale,RoundingMode.HALF_UP);
-            runningTotal = runningTotal.subtract(toSubtract).setScale(scale,RoundingMode.HALF_UP);
+            toSubtract = previous.multiply(one.add(two.multiply(n))).multiply(half.subtract(n)).divide(three.add(two.multiply(n)),scale,roundingMode).divide(n.add(one),scale,roundingMode).abs().multiply(quarter).setScale(scale,roundingMode);
+            runningTotal = runningTotal.subtract(toSubtract).setScale(scale,roundingMode);
             System.out.println("Count: "+count+". Pi = "+runningTotal.subtract(root3over8).multiply(twelve).stripTrailingZeros());
             n = n.add(one);
             count++;
@@ -149,9 +144,8 @@ public class Main {
 
     void arctan_of_1_over_root_3() {
         //approximates pi using the maclaurin expansion of arctan and 6arctan(1/sqrt(3)) = pi
-        //between n=30 and n=31 not enough is subtracted
         int count = 0;
-        int scale = 500;
+        int scale = 400;
         BigDecimal toAdd = new BigDecimal(2).setScale(scale,RoundingMode.HALF_UP);
         BigDecimal runningTotal = new BigDecimal(0).setScale(scale,RoundingMode.HALF_UP);
         BigDecimal three = new BigDecimal(3).setScale(scale,RoundingMode.HALF_UP);
@@ -184,7 +178,7 @@ public class Main {
 
     void vietes() {
         //approximates pi using viète's formula
-        int scale = 18000;
+        int scale = 400;
         BigDecimal runningTotal = new BigDecimal(1).setScale(scale, RoundingMode.HALF_UP);
         BigDecimal two = new BigDecimal(2).setScale(scale, RoundingMode.HALF_UP);
         BigDecimal zero = new BigDecimal(0).setScale(scale, RoundingMode.HALF_UP);
